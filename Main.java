@@ -1,8 +1,12 @@
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
 
-public class Main {
+public class Clientes {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean salir = false;
@@ -23,7 +27,7 @@ public class Main {
                 case 2:
                     verReservas();
                     break;
-                case 3:
+                case 3: 
                     salir = true;
                     break;
                 default:
@@ -98,6 +102,7 @@ public class Main {
         String respuestaServicios = scanner.next();
 
         double costoServicios = 0.0;
+        List<Integer> serviciosSeleccionados = new ArrayList<>();
 
         if (respuestaServicios.equalsIgnoreCase("S")) {
             System.out.println("Lista de servicios adicionales:");
@@ -111,22 +116,25 @@ public class Main {
                 System.out.print("Ingrese el número del servicio adicional elegido (4 para salir): ");
                 int opcionServicio = scanner.nextInt();
 
-                switch (opcionServicio) {
-                    case 1:
-                        costoServicios += 20.0;
-                        break;
-                    case 2:
-                        costoServicios += 10.0;
-                        break;
-                    case 3:
-                        costoServicios += 15.0;
-                        break;
-                    case 4:
-                        agregarServicios = false;
-                        break;
-                    default:
-                        System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
-                        break;
+                if (opcionServicio == 4) {
+                    agregarServicios = false;
+                } else if (serviciosSeleccionados.contains(opcionServicio)) {
+                    System.out.println("Ya ha seleccionado ese servicio. Por favor, elija otro.");
+                } else if (opcionServicio >= 1 && opcionServicio <= 3) {
+                    serviciosSeleccionados.add(opcionServicio);
+                    switch (opcionServicio) {
+                        case 1:
+                            costoServicios += 20.0;
+                            break;
+                        case 2:
+                            costoServicios += 10.0;
+                            break;
+                        case 3:
+                            costoServicios += 15.0;
+                            break;
+                    }
+                } else {
+                    System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
                 }
             }
         }
@@ -166,7 +174,6 @@ public class Main {
             System.out.println("Descuento aplicado: 5% por estadía de más de 7 días");
         }
 
-    
         try {
             FileWriter writer = new FileWriter("reservas.txt", true);
             writer.write("Cliente: " + nombreCliente + "\n");
@@ -186,12 +193,30 @@ public class Main {
             writer.write("-------------------\n");
             writer.close();
             System.out.println("Reserva guardada en el archivo reservas.txt");
+            System.out.println("");
+            System.out.println("MUCHAS GRACIAS POR SU PREFERENCIA");
         } catch (IOException e) {
             System.out.println("Error al guardar la reserva en el archivo.");
         }
     }
 
     public static void verReservas() {
-        System.out.println("Funcionalidad de ver reservas aún no implementada.");
+        System.out.println("");
+        System.out.println("Reservas existentes:");
+        System.out.println("-------------------");
+
+        try {
+            File file = new File("reservas.txt");
+            Scanner scanner = new Scanner(file);
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                System.out.println(line);
+            }
+
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("No se encontró el archivo de reservas.");
+        }
     }
 }
