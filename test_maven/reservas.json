@@ -1,0 +1,12 @@
+[
+  {
+    "nombreCliente": "Juan",
+    "rutCliente": "21469214-7",
+    "duracionEstadia": 3,
+    "diaLlegada": "Lunes 1",
+    "opcionHabitacion": 1,
+    "costoHabitacion": 100.0,
+    "costoServicios": 0.0,
+    "costoTotal": 300.0
+  }
+]
